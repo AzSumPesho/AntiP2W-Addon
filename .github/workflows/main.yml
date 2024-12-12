@@ -30,7 +30,7 @@ jobs:
           configuration-cache-enabled: true
           arguments: build
       - name: Upload artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: the jar
           path: build/libs/*.jar
