@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -34,10 +34,30 @@ jobs:
         with:
           name: the jar
           path: build/libs/*.jar
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.run_number }}
+          release_name: "Release v${{ github.run_number }}"
+          body: "Automatically generated release from GitHub Actions."
+          draft: false
+          prerelease: false
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: build/libs/*.jar
+          asset_name: the-jar.jar
+          asset_content_type: application/java-archive
       - name: Discord notification
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
           DISCORD_USERNAME: AntiP2W-Tools
           DISCORD_AVATAR: https://i.imgur.com/VvG5iFz.png
-          DISCORD_EMBEDS: '[{"title":"New Commit ➡️ Click","description":"[Download ➡️ Click](https://github.com/AzSumPesho/AntiP2W-Addon/actions/runs/${{ github.run_id }})","color":43690,"url":"https://github.com/AzSumPesho/AntiP2W-Addon/commit/${{ github.sha }}"}]'
+          DISCORD_EMBEDS: '[{"title":"New Commit ➡️ Click","description":"[Download ➡️ Click](https://github.com/AzSumPesho/AntiP2W-Addon/releases/latest)","color":43690,"url":"https://github.com/AzSumPesho/AntiP2W-Addon/commit/${{ github.sha }}"}]'
         uses: Ilshidur/action-discord@master
