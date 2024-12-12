@@ -34,6 +34,9 @@ jobs:
         with:
           name: the jar
           path: build/libs/*.jar
+      - name: Get Artifact File Name
+        id: artifact_name
+        run: echo "artifact_name=$(basename build/libs/*.jar)" >> $GITHUB_ENV
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
@@ -51,8 +54,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: build/libs/*.jar
-          asset_name: the-jar.jar
+          asset_path: build/libs/${{ env.artifact_name }}
+          asset_name: ${{ env.artifact_name }}
           asset_content_type: application/java-archive
       - name: Discord notification
         env:
