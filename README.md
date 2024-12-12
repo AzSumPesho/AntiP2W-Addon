@@ -1,7 +1,5 @@
-## Please note that this project is discontinued. There will be no further updates.
-
 # AntiP2W Tools
-Tools to help the Anti Pay-to-Win movement in block game
+block game antip2w stuff
 
 ## Requires
 For this addon to work you need the following things:
